@@ -2,7 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from '../users/user.schema';
+import { User, UserDocument } from '../users/user.schema';
+import { CreateUserDto } from '../users/dto/createUser.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +21,15 @@ export class AuthService {
         return null;
     }
 
-    async login(user: any) {
+    async login(user: UserDocument) {
         const payload = { email: user.email, sub: user._id };
         return {
+            user,
             access_token: this.jwtService.sign(payload),
         };
     }
 
-    async register(user: Partial<User>) {
+    async register(user: CreateUserDto) {
         if (!user.password) {
             throw new Error('Password is required');
         }

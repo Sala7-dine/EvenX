@@ -14,7 +14,7 @@ export class EventsService {
     }
 
     async findAll(): Promise<Event[]> {
-        return this.eventModel.find().exec();
+        return this.eventModel.find({ status: EventStatus.PUBLISHED }).exec();
     }
 
     async findOne(id: string): Promise<Event> {
@@ -35,9 +35,19 @@ export class EventsService {
         return updatedEvent;
     }
 
+    async publish(id: string): Promise<Event> {
+        const publishedEvent = await this.eventModel
+            .findByIdAndUpdate(id, { status: EventStatus.PUBLISHED }, { new: true })
+            .exec();
+        if (!publishedEvent) {
+            throw new NotFoundException(`Event with ID ${id} not found`);
+        }
+        return publishedEvent;
+    }
+
     async cancel(id: string): Promise<Event> {
         const cancelledEvent = await this.eventModel
-            .findByIdAndUpdate(id, { status: EventStatus.CANCELLED }, { new: true })
+            .findByIdAndUpdate(id, { status: EventStatus.CANCELED }, { new: true })
             .exec();
         if (!cancelledEvent) {
             throw new NotFoundException(`Event with ID ${id} not found`);

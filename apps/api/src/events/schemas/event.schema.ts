@@ -4,8 +4,9 @@ import { HydratedDocument } from 'mongoose';
 export type EventDocument = HydratedDocument<Event>;
 
 export enum EventStatus {
-    ACTIVE = 'ACTIVE',
-    CANCELLED = 'CANCELLED',
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
+    CANCELED = 'CANCELED',
 }
 
 @Schema()
@@ -22,7 +23,10 @@ export class Event {
     @Prop({ required: true })
     location: string;
 
-    @Prop({ required: true, enum: EventStatus, default: EventStatus.ACTIVE })
+    @Prop({ required: true })
+    capacity: number;
+
+    @Prop({ required: true, enum: EventStatus, default: EventStatus.DRAFT })
     status: EventStatus;
 }
 

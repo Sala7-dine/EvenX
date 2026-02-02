@@ -35,6 +35,13 @@ export class EventsController {
         return this.eventsService.update(id, updateEventDto);
     }
 
+    @Patch(':id/publish')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.ADMIN)
+    publish(@Param('id') id: string) {
+        return this.eventsService.publish(id);
+    }
+
     @Delete(':id')
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.ADMIN)

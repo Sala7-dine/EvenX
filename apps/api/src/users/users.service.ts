@@ -13,7 +13,6 @@ export class UsersService {
     }
 
     async create(user: CreateUserDto): Promise<User> {
-        const newUser = new this.userModel(user);
-        return newUser.save();
+        return this.userModel.create(user);
     }
 }

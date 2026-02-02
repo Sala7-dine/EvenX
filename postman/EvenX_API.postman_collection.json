@@ -96,7 +96,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"title\": \"Tech Conference 2024\",\n    \"description\": \"Annual technology conference.\",\n    \"date\": \"2024-12-01T09:00:00Z\",\n    \"location\": \"Convention Center\"\n}",
+                            "raw": "{\n    \"title\": \"Tech Conference 2024\",\n    \"description\": \"Annual technology conference.\",\n    \"date\": \"2024-12-01T09:00:00Z\",\n    \"location\": \"Convention Center\",\n    \"capacity\": 100\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -110,6 +110,41 @@
                             ],
                             "path": [
                                 "events"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Publish Event",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{accessToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/events/:id/publish",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "events",
+                                ":id",
+                                "publish"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": ""
+                                }
                             ]
                         }
                     },

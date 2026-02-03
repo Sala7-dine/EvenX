@@ -433,6 +433,41 @@
                         }
                     },
                     "response": []
+                },
+                {
+                    "name": "Get Ticket PDF",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{accessToken}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/reservations/:id/ticket",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "reservations",
+                                ":id",
+                                "ticket"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "replace_with_valid_reservation_id"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
                 }
             ]
         }

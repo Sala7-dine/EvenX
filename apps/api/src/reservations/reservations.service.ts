@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { Reservation, ReservationStatus } from './schemas/reservation.schema';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { EventsService } from '../events/events.service';
+import PDFDocument = require('pdfkit');
 
 @Injectable()
 export class ReservationsService {
@@ -84,5 +85,58 @@ export class ReservationsService {
 
         reservation.status = ReservationStatus.CANCELED;
         return reservation.save();
+    }
+
+    async generateTicket(id: string, userId: string): Promise<Buffer> {
+        const reservation = await this.reservationModel
+            .findById(id)
+            .populate('eventId')
+            .populate('userId');
+
+        if (!reservation) {
+            throw new NotFoundException('Reservation not found');
+        }
+
+        if (reservation.status !== ReservationStatus.CONFIRMED) {
+            throw new BadRequestException(
+                'Ticket not available for unconfirmed reservation',
+            );
+        }
+
+        const event = reservation.eventId as any;
+        const user = reservation.userId as any;
+
+        return new Promise((resolve) => {
+            const doc = new PDFDocument({ size: 'A4', margin: 50 });
+            const buffers: Buffer[] = [];
+
+            doc.on('data', (buffer) => buffers.push(buffer));
+            doc.on('end', () => resolve(Buffer.concat(buffers)));
+
+            doc.fontSize(25).text('EvenX Ticket', { align: 'center' });
+            doc.moveDown();
+
+            doc.fontSize(18).text(`Event: ${event.title}`);
+            doc.fontSize(14).text(
+                `Date: ${new Date(event.date).toLocaleDateString()}`,
+            );
+            doc.text(`Location: ${event.location}`);
+            doc.moveDown();
+
+            doc.fontSize(16).text('Participant Details');
+            doc.fontSize(14).text(`Name: ${user.name}`);
+            doc.text(`Email: ${user.email}`);
+            doc.moveDown();
+
+            doc.fontSize(12).text(`Reservation ID: ${reservation._id}`);
+            doc.text(`Status: ${reservation.status}`);
+            doc.moveDown();
+
+            doc.fontSize(10).text('Please present this ticket at the entrance.', {
+                align: 'center',
+            });
+
+            doc.end();
+        });
     }
 }

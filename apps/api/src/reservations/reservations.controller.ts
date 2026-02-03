@@ -8,6 +8,8 @@ import {
     Request,
     UseGuards,
     ForbiddenException,
+    StreamableFile,
+    Header,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -39,6 +41,18 @@ export class ReservationsController {
     @Get('me')
     findMyReservations(@Request() req) {
         return this.reservationsService.findByUser(req.user.userId);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.ADMIN, Role.PARTICIPANT)
+    @Get(':id/ticket')
+    @Header('Content-Type', 'application/pdf')
+    @Header('Content-Disposition', 'attachment; filename="ticket.pdf"')
+    async getTicket(@Param('id') id: string, @Request() req) {
+        const user = req.user;
+        
+        const buffer = await this.reservationsService.generateTicket(id, user.userId);
+        return new StreamableFile(buffer);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)

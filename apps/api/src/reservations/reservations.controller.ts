@@ -1,11 +1,13 @@
 import {
     Body,
     Controller,
+    Get,
     Param,
     Patch,
     Post,
     Request,
     UseGuards,
+    ForbiddenException,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -27,15 +29,35 @@ export class ReservationsController {
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.ADMIN)
+    @Get()
+    findAll() {
+        return this.reservationsService.findAll();
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.PARTICIPANT)
+    @Get('me')
+    findMyReservations(@Request() req) {
+        return this.reservationsService.findByUser(req.user.userId);
+    }
+
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.ADMIN)
     @Patch(':id/confirm')
     confirm(@Param('id') id: string) {
         return this.reservationsService.confirm(id);
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles(Role.ADMIN)
+    @Roles(Role.ADMIN, Role.PARTICIPANT)
     @Patch(':id/cancel')
-    cancel(@Param('id') id: string) {
-        return this.reservationsService.cancel(id);
+    cancel(@Param('id') id: string, @Request() req) {
+        const user = req.user;
+        if (user.role === Role.ADMIN) {
+            return this.reservationsService.cancel(id);
+        } else if (user.role === Role.PARTICIPANT) {
+            return this.reservationsService.cancel(id, user.userId);
+        }
+        throw new ForbiddenException('Unauthorized action');
     }
 }

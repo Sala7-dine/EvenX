@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    ForbiddenException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -45,6 +46,21 @@ export class ReservationsService {
         return newReservation.save();
     }
 
+    async findAll() {
+        return this.reservationModel
+            .find()
+            .populate({ path: 'eventId', select: 'title date location' })
+            .populate({ path: 'userId', select: 'name email' })
+            .exec();
+    }
+
+    async findByUser(userId: string) {
+        return this.reservationModel
+            .find({ userId: userId as any })
+            .populate({ path: 'eventId', select: 'title date location' })
+            .exec();
+    }
+
     async confirm(id: string) {
         const reservation = await this.reservationModel.findById(id);
         if (!reservation) {
@@ -55,10 +71,15 @@ export class ReservationsService {
         return reservation.save();
     }
 
-    async cancel(id: string) {
+    async cancel(id: string, userId?: string) {
         const reservation = await this.reservationModel.findById(id);
         if (!reservation) {
             throw new NotFoundException('Reservation not found');
+        }
+
+        // Strict ownership validation if userId is provided (Participant case)
+        if (userId && reservation.userId.toString() !== userId) {
+            throw new ForbiddenException('You can only cancel your own reservations');
         }
 
         reservation.status = ReservationStatus.CANCELED;

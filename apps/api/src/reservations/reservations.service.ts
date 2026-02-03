@@ -44,4 +44,24 @@ export class ReservationsService {
 
         return newReservation.save();
     }
+
+    async confirm(id: string) {
+        const reservation = await this.reservationModel.findById(id);
+        if (!reservation) {
+            throw new NotFoundException('Reservation not found');
+        }
+
+        reservation.status = ReservationStatus.CONFIRMED;
+        return reservation.save();
+    }
+
+    async cancel(id: string) {
+        const reservation = await this.reservationModel.findById(id);
+        if (!reservation) {
+            throw new NotFoundException('Reservation not found');
+        }
+
+        reservation.status = ReservationStatus.CANCELED;
+        return reservation.save();
+    }
 }

@@ -56,10 +56,10 @@ export const AdminReservationTable = ({ initialReservations }: { initialReservat
     };
 
     return (
-        <div className="bg-[#1A2035] border border-white/5 rounded-2xl overflow-hidden">
+        <div className="bg-transparent border border-[#1F1F1F] rounded-2xl overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                    <thead className="bg-white/5 text-gray-400 uppercase font-semibold">
+                    <thead className="bg-[#111] text-[#666] uppercase font-semibold text-xs tracking-wider">
                         <tr>
                             <th className="px-6 py-4">Event</th>
                             <th className="px-6 py-4">Participant</th>
@@ -83,8 +83,8 @@ export const AdminReservationTable = ({ initialReservations }: { initialReservat
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className={`text-xs px-2 py-1 rounded-full border ${reservation.status === 'CONFIRMED' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                            reservation.status === 'CANCELED' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                                'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                                        reservation.status === 'CANCELED' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                                            'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                                         }`}>
                                         {reservation.status}
                                     </span>

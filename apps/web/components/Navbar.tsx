@@ -65,7 +65,7 @@ export const Navbar = () => {
 
                 {isAuthenticated ? (
                     <div className="flex items-center gap-4">
-                        <Link href="/dashboard">
+                        <Link href="/participant/dashboard">
                             <Button variant="ghost" className="text-gray-300 hover:text-white px-4 text-xs font-bold tracking-widest uppercase">
                                 Dashboard
                             </Button>

@@ -78,6 +78,11 @@ export default function LoginPage() {
                         </div>
 
                         <div className="hidden lg:block mb-8">
+                            <div className="flex justify-between items-center mb-8">
+                                <Link href="/" className="inline-flex items-center text-gray-400 hover:text-white transition-colors text-sm font-medium group">
+                                    <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Home
+                                </Link>
+                            </div>
                             <h2 className="text-2xl font-bold text-white mb-2">Login</h2>
                             <p className="text-gray-400 text-sm">Enter your details to access your account</p>
                         </div>

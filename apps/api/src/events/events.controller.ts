@@ -23,6 +23,13 @@ export class EventsController {
         return this.eventsService.findAll();
     }
 
+    @Get('admin')
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.ADMIN)
+    findAllAdmin() {
+        return this.eventsService.findAllAdmin();
+    }
+
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.eventsService.findOne(id);

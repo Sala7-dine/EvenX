@@ -26,8 +26,8 @@ export default function LoginPage() {
             // Store token (basic implementation)
             if (res.access_token) {
                 localStorage.setItem('token', res.access_token);
-                // Dispatch event for Navbar update if needed, or just redirect
-                window.dispatchEvent(new Event('storage'));
+                // Dispatch event for Navbar update
+                window.dispatchEvent(new Event('auth-change'));
                 router.push('/');
             }
         } catch (err) {

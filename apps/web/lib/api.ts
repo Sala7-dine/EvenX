@@ -62,3 +62,16 @@ export async function register(data: RegisterData) {
     }
     return res.json();
 }
+
+export async function logout() {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const res = await fetch(`${API_URL}/auth/logout`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+    });
+    // Even if it fails (e.g. 401), we should clear local state, so we don't necessarily throw here
+    return res.status === 200 || res.status === 201;
+}

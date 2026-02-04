@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Search, LogOut, User } from 'lucide-react';
 import { Button } from './Button';
 import { logout } from '../lib/api';
+import Cookies from 'js-cookie';
 
 export const Navbar = () => {
     const router = useRouter();
@@ -14,7 +15,7 @@ export const Navbar = () => {
     useEffect(() => {
         // Check auth status on mount
         const checkAuth = () => {
-            const token = localStorage.getItem('token');
+            const token = Cookies.get('token');
             setIsAuthenticated(!!token);
         };
 
@@ -33,7 +34,7 @@ export const Navbar = () => {
 
     const handleLogout = async () => {
         await logout();
-        localStorage.removeItem('token');
+        Cookies.remove('token');
         setIsAuthenticated(false);
         window.dispatchEvent(new Event('auth-change')); // Notify other components
         router.push('/login');
@@ -64,9 +65,11 @@ export const Navbar = () => {
 
                 {isAuthenticated ? (
                     <div className="flex items-center gap-4">
-                        <Button variant="ghost" className="!p-2 text-gray-300 hover:text-white">
-                            <User className="w-5 h-5" />
-                        </Button>
+                        <Link href="/dashboard">
+                            <Button variant="ghost" className="text-gray-300 hover:text-white px-4 text-xs font-bold tracking-widest uppercase">
+                                Dashboard
+                            </Button>
+                        </Link>
                         <Button
                             variant="primary"
                             onClick={handleLogout}

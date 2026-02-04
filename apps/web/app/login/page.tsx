@@ -1,5 +1,7 @@
 "use client";
 
+import Cookies from 'js-cookie';
+
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -25,7 +27,9 @@ export default function LoginPage() {
             const res = await login(formData);
             // Store token (basic implementation)
             if (res.access_token) {
-                localStorage.setItem('token', res.access_token);
+                // Store token in Cookie for SSR for Client
+                Cookies.set('token', res.access_token, { expires: 7, path: '/' });
+
                 // Dispatch event for Navbar update
                 window.dispatchEvent(new Event('auth-change'));
                 router.push('/');

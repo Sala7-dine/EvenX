@@ -37,7 +37,18 @@ export class ReservationsService {
             throw new BadRequestException('Event is fully booked');
         }
 
-        // 3. Create Reservation
+        // 3. Check if User already booked
+        const existingReservation = await this.reservationModel.findOne({
+            userId: userId as any,
+            eventId: eventId as any,
+            status: { $ne: ReservationStatus.CANCELED },
+        });
+
+        if (existingReservation) {
+            throw new BadRequestException('You have already booked this event');
+        }
+
+        // 4. Create Reservation
         const newReservation = new this.reservationModel({
             ...createReservationDto,
             userId,

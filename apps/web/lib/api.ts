@@ -15,6 +15,28 @@ export async function getEvents() {
     }
 }
 
+export async function getAdminEvents() {
+    const token = Cookies.get('token');
+    // If running on server, we might need a different way to get token, 
+    // but for now this is called from Client Component useEffect or passed from Server Component.
+    // Actually, AdminEventsPage is Server Component, so we need a server-side version expecting token.
+    return [];
+}
+
+export async function getAdminEventsServer(token: string) {
+    if (!token) return [];
+
+    const res = await fetch(`${API_URL}/events/admin`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        cache: 'no-store'
+    });
+
+    if (!res.ok) return [];
+    return res.json();
+}
+
 export async function getEvent(id: string) {
     try {
         const res = await fetch(`${API_URL}/events/${id}`, { cache: 'no-store' });
@@ -274,6 +296,24 @@ export async function deleteEvent(id: string) {
     if (!res.ok) {
         const error = await res.json().catch(() => ({ message: 'Failed to delete event' }));
         throw new Error(error.message || 'Failed to delete event');
+    }
+    return res.json();
+}
+
+export async function publishEvent(id: string) {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/events/${id}/publish`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({ message: 'Failed to publish event' }));
+        throw new Error(error.message || 'Failed to publish event');
     }
     return res.json();
 }

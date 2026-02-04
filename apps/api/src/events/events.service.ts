@@ -14,7 +14,11 @@ export class EventsService {
     }
 
     async findAll(): Promise<Event[]> {
-        return this.eventModel.find({ status: EventStatus.PUBLISHED }).exec();
+        return this.eventModel.find({ status: EventStatus.PUBLISHED }).sort({ date: 1 }).exec();
+    }
+
+    async findAllAdmin(): Promise<Event[]> {
+        return this.eventModel.find().sort({ date: 1 }).exec();
     }
 
     async findOne(id: string): Promise<Event> {

@@ -16,9 +16,11 @@ interface EventFormProps {
         capacity: number;
     };
     isEditing?: boolean;
+    onSuccess?: () => void;
+    onCancel?: () => void;
 }
 
-export const EventForm = ({ initialData, isEditing = false }: EventFormProps) => {
+export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel }: EventFormProps) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -44,13 +46,22 @@ export const EventForm = ({ initialData, isEditing = false }: EventFormProps) =>
         setError('');
 
         try {
+            const payload = {
+                ...formData,
+                date: new Date(formData.date).toISOString()
+            };
+
             if (isEditing && initialData?._id) {
-                await updateEvent(initialData._id, formData);
+                await updateEvent(initialData._id, payload);
             } else {
-                await createEvent(formData);
+                await createEvent(payload);
             }
-            router.push('/admin/events');
-            router.refresh();
+            if (onSuccess) {
+                onSuccess();
+            } else {
+                router.push('/admin/events');
+                router.refresh();
+            }
         } catch (err: any) {
             setError(err.message || 'Something went wrong');
             console.error(err);
@@ -160,7 +171,7 @@ export const EventForm = ({ initialData, isEditing = false }: EventFormProps) =>
                 <Button
                     type="button"
                     variant="ghost"
-                    onClick={() => router.back()}
+                    onClick={onCancel ? onCancel : () => router.back()}
                     disabled={loading}
                     className="text-gray-400 hover:text-white"
                 >

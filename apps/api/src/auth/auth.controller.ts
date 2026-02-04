@@ -19,4 +19,9 @@ export class AuthController {
     async register(@Body() createUserDto: CreateUserDto) {
         return this.authService.register(createUserDto);
     }
+
+    @Post('logout')
+    async logout() {
+        return { message: 'Logged out successfully' };
+    }
 }

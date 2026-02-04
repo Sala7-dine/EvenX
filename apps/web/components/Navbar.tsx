@@ -23,9 +23,14 @@ export const Navbar = () => {
             {/* Actions */}
             <div className="flex items-center gap-6">
                 <Search className="w-5 h-5 text-gray-400 cursor-pointer hover:text-white transition-colors" />
-                <Button variant="primary" className="px-8 !py-2.5 text-xs font-bold tracking-widest uppercase">
-                    Contact
-                </Button>
+                <Link href="/login" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+                    LOGIN
+                </Link>
+                <Link href="/register">
+                    <Button variant="primary" className="px-6 !py-2 text-xs font-bold tracking-widest uppercase">
+                        Sign Up
+                    </Button>
+                </Link>
             </div>
         </nav>
     );

@@ -169,3 +169,111 @@ export async function getTicket(reservationId: string) {
     }
     return res.blob();
 }
+
+// Admin API Functions
+
+export async function getAllReservations() {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/reservations`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        cache: 'no-store'
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch reservations');
+    }
+    return res.json();
+}
+
+export async function confirmReservation(id: string) {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/reservations/${id}/confirm`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to confirm reservation');
+    }
+    return res.json();
+}
+
+export async function getAllReservationsServer(token: string) {
+    if (!token) return [];
+
+    const res = await fetch(`${API_URL}/reservations`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        cache: 'no-store'
+    });
+
+    if (!res.ok) return [];
+    return res.json();
+}
+
+export async function createEvent(data: any) {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/events`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({ message: 'Failed to create event' }));
+        throw new Error(error.message || 'Failed to create event');
+    }
+    return res.json();
+}
+
+export async function updateEvent(id: string, data: any) {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/events/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({ message: 'Failed to update event' }));
+        throw new Error(error.message || 'Failed to update event');
+    }
+    return res.json();
+}
+
+export async function deleteEvent(id: string) {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/events/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({ message: 'Failed to delete event' }));
+        throw new Error(error.message || 'Failed to delete event');
+    }
+    return res.json();
+}

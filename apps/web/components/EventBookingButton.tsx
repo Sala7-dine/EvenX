@@ -27,7 +27,7 @@ export const EventBookingButton = ({ eventId, isBooked = false }: EventBookingBu
             setStatus('success');
             setMessage('Reservation confirmed!');
             // Optional: Redirect to dashboard after delay
-            setTimeout(() => router.push('/dashboard'), 1500);
+            setTimeout(() => router.push('/participant/dashboard'), 1500);
         } catch (error: any) {
             console.error(error);
             // Handle "Already Booked" as a state update rather than an error

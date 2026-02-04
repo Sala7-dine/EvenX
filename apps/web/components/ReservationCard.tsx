@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Calendar, MapPin, X, Ticket } from 'lucide-react';
 import { Button } from './Button';
+import { getTicket } from '../lib/api';
 
 interface ReservationProps {
     reservation: {
@@ -81,6 +83,32 @@ export const ReservationCard = ({ reservation, onCancel, cancellingId }: Reserva
                         {isCancelling ? 'Cancelling...' : 'Cancel'}
                     </Button>
                 )}
+
+                {reservation.status === 'CONFIRMED' && (
+                    <Button
+                        variant="primary"
+                        onClick={async () => {
+                            try {
+                                const blob = await getTicket(reservation._id);
+                                const url = window.URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `ticket-${event.title.replace(/\s+/g, '-').toLowerCase()}.pdf`;
+                                document.body.appendChild(a);
+                                a.click();
+                                window.URL.revokeObjectURL(url);
+                                document.body.removeChild(a);
+                            } catch (error) {
+                                console.error('Failed to download ticket', error);
+                                alert('Failed to generate ticket. Please try again.');
+                            }
+                        }}
+                        className="flex-1 text-xs bg-purple-600 hover:bg-purple-700 text-white border-0"
+                    >
+                        Get Ticket
+                    </Button>
+                )}
+
                 <Link href={`/events/${event._id}`} className="flex-1">
                     <Button variant="outline" className="w-full text-xs">
                         View Event

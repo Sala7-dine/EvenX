@@ -152,3 +152,20 @@ export async function getMyReservationsServer(token: string) {
     if (!res.ok) return [];
     return res.json();
 }
+
+export async function getTicket(reservationId: string) {
+    const token = Cookies.get('token');
+    if (!token) throw new Error('Not authenticated');
+
+    const res = await fetch(`${API_URL}/reservations/${reservationId}/ticket`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+    });
+
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({ message: 'Failed to download ticket' }));
+        throw new Error(error.message || 'Failed to download ticket');
+    }
+    return res.blob();
+}

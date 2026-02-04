@@ -1,8 +1,10 @@
 import { Navbar } from "../../../components/Navbar";
 import { Button } from "../../../components/Button";
-import { getEvent } from "../../../lib/api";
+import { getEvent, getMyReservationsServer } from "../../../lib/api";
+import { cookies } from 'next/headers';
 import { Calendar, MapPin, Users, Ticket, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { EventBookingButton } from "../../../components/EventBookingButton";
 
 export default async function EventPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -15,6 +17,23 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                 <Link href="/" className="text-purple-400 hover:text-white underline">Return Home</Link>
             </div>
         );
+    }
+
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
+    let isBooked = false;
+
+    if (token) {
+        try {
+            const reservations = await getMyReservationsServer(token);
+            console.log('User Reservations:', JSON.stringify(reservations, null, 2)); // Debug: See structure
+            isBooked = reservations.some((r: any) => {
+                const rEventId = r.eventId?._id || r.event?._id;
+                return rEventId === id && r.status !== 'CANCELLED';
+            });
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     const dateObj = new Date(event.date);
@@ -90,10 +109,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
                             </div>
                         </div>
 
-                        <Button className="w-full py-4 text-base tracking-widest uppercase shadow-lg shadow-purple-600/25">
-                            Register Now
-                        </Button>
-                        <p className="text-center text-xs text-gray-500 mt-4">Secure payment powered by EvenX</p>
+                        <EventBookingButton eventId={event._id} isBooked={isBooked} />
                     </div>
                 </div>
             </div>

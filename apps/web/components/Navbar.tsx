@@ -8,15 +8,31 @@ import { Button } from './Button';
 import { logout } from '../lib/api';
 import Cookies from 'js-cookie';
 
+import { jwtDecode } from 'jwt-decode';
+
 export const Navbar = () => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [dashboardLink, setDashboardLink] = useState('/participant/dashboard');
 
     useEffect(() => {
-        // Check auth status on mount
+        // Check auth status and role on mount
         const checkAuth = () => {
             const token = Cookies.get('token');
             setIsAuthenticated(!!token);
+
+            if (token) {
+                try {
+                    const decoded: any = jwtDecode(token);
+                    if (decoded.role === 'ADMIN') {
+                        setDashboardLink('/admin/dashboard');
+                    } else {
+                        setDashboardLink('/participant/dashboard');
+                    }
+                } catch (error) {
+                    setDashboardLink('/participant/dashboard');
+                }
+            }
         };
 
         checkAuth();
@@ -36,6 +52,7 @@ export const Navbar = () => {
         await logout();
         Cookies.remove('token');
         setIsAuthenticated(false);
+        setDashboardLink('/participant/dashboard'); // Reset
         window.dispatchEvent(new Event('auth-change')); // Notify other components
         router.push('/login');
     };
@@ -65,7 +82,7 @@ export const Navbar = () => {
 
                 {isAuthenticated ? (
                     <div className="flex items-center gap-4">
-                        <Link href="/participant/dashboard">
+                        <Link href={dashboardLink}>
                             <Button variant="ghost" className="text-gray-300 hover:text-white px-4 text-xs font-bold tracking-widest uppercase">
                                 Dashboard
                             </Button>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { EventForm } from '../../../../components/admin/EventForm';
-import { getEvent } from '../../../../lib/api';
+import { EventForm } from '../../../../../components/admin/EventForm';
+import { getEvent } from '../../../../../lib/api';
 import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 

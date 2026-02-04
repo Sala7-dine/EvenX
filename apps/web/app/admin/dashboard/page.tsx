@@ -32,24 +32,39 @@ export default async function AdminDashboard() {
     ];
 
     return (
-        <div>
-            <div className="mb-12">
-                <h1 className="text-4xl font-bold mb-4">Admin Overview</h1>
-                <p className="text-gray-400">Welcome back, Administrator.</p>
+        <div className="font-sans text-[#E1E1E1]">
+            {/* Header Area */}
+            <div className="mb-8">
+                <div className="text-sm text-[#666] mb-1">Workspace</div>
+                <h1 className="text-2xl font-bold mb-6">Overview</h1>
+
+                {/* Tabs */}
+                <div className="flex items-center gap-8 border-b border-[#1F1F1F] mb-8">
+                    {['Dashboard', 'Analytics', 'Activity'].map((tab, i) => (
+                        <div key={tab} className={`pb-3 text-sm font-medium cursor-pointer relative ${i === 0 ? 'text-white' : 'text-[#666] hover:text-[#999]'}`}>
+                            {tab}
+                            {i === 0 && <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white"></div>}
+                        </div>
+                    ))}
+                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
                 {stats.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
-                        <div key={index} className="bg-[#1A2035] border border-white/5 rounded-2xl p-6 hover:border-purple-500/30 transition-all">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`${stat.bg} ${stat.color} w-12 h-12 rounded-xl flex items-center justify-center`}>
-                                    <Icon size={24} />
+                        <div key={index} className="bg-[#111] border border-[#1F1F1F] rounded-xl p-5 hover:border-[#333] transition-colors">
+                            <div className="flex justify-between items-start mb-3">
+                                <div className={`p-2 rounded-lg ${stat.bg.replace('/10', '/20')} text-white`}>
+                                    <Icon size={18} />
                                 </div>
+                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full bg-[#1C1C1E] border border-[#333] ${stat.color}`}>
+                                    +12%
+                                </span>
                             </div>
-                            <div className="text-3xl font-bold mb-1">{stat.value}</div>
-                            <div className="text-sm text-gray-400">{stat.label}</div>
+                            <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                            <div className="text-xs text-[#666]">{stat.label}</div>
                         </div>
                     );
                 })}
@@ -57,24 +72,34 @@ export default async function AdminDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Recent Reservations Preview */}
-                <div className="bg-[#1A2035] border border-white/5 rounded-2xl p-6">
-                    <h2 className="text-xl font-bold mb-6">Recent Reservations</h2>
-                    <div className="space-y-4">
-                        {reservations.slice(0, 5).map((res: any) => (
-                            <div key={res._id} className="flex items-center justify-between p-4 bg-[#111625] rounded-xl border border-white/5">
-                                <div>
-                                    <div className="font-bold">{res.eventId?.title || 'Unknown Event'}</div>
-                                    <div className="text-xs text-gray-400">{res.userId?.email}</div>
+                <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium text-[#666]">Recent Activity</div>
+                        <div className="text-xs text-[#4E85EB] cursor-pointer hover:underline">View All</div>
+                    </div>
+
+                    <div className="bg-[#111] rounded-xl border border-[#1F1F1F] overflow-hidden">
+                        {reservations.slice(0, 5).map((res: any, index) => (
+                            <div key={res._id} className={`flex items-center justify-between p-4 bg-[#111] hover:bg-[#1C1C1E] transition-colors gap-4 ${index !== 4 ? 'border-b border-[#1F1F1F]' : ''}`}>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-900 to-indigo-900 flex items-center justify-center text-xs font-bold text-purple-200 border border-purple-500/20">
+                                        {res.userId?.name?.charAt(0) || 'U'}
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-medium text-[#E1E1E1]">{res.eventId?.title || 'Unknown Event'}</div>
+                                        <div className="text-xs text-[#666]">{res.userId?.email}</div>
+                                    </div>
                                 </div>
-                                <span className={`text-xs px-2 py-1 rounded-full border ${res.status === 'CONFIRMED' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                                        res.status === 'CANCELED' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                                            'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+
+                                <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${res.status === 'CONFIRMED' ? 'bg-[#1A2F23] text-green-400 border-green-900/30' :
+                                        res.status === 'CANCELED' ? 'bg-[#2F1A1A] text-red-400 border-red-900/30' :
+                                            'bg-[#2C2C2E] text-yellow-400 border-yellow-900/30'
                                     }`}>
                                     {res.status}
                                 </span>
                             </div>
                         ))}
-                        {reservations.length === 0 && <div className="text-gray-500 text-center py-4">No reservations found</div>}
+                        {reservations.length === 0 && <div className="text-[#666] text-center py-8 text-sm">No reservations found</div>}
                     </div>
                 </div>
             </div>

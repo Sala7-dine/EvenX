@@ -71,7 +71,7 @@ export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel 
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl bg-[#1A2035] p-8 rounded-2xl border border-white/5">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
             {error && (
                 <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm mb-6">
                     {error}
@@ -80,15 +80,15 @@ export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel 
 
             <div className="space-y-4">
                 <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider ml-1">Event Title</label>
+                    <label className="text-xs font-semibold text-[#666] uppercase tracking-wider ml-1">Event Title</label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Type className="h-5 w-5 text-gray-500 group-focus-within:text-purple-400 transition-colors" />
+                            <Type className="h-5 w-5 text-[#666] group-focus-within:text-purple-400 transition-colors" />
                         </div>
                         <input
                             type="text"
                             placeholder="e.g. Summer Music Festival"
-                            className="w-full bg-[#111625] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/50"
+                            className="w-full bg-[#111] border border-[#1F1F1F] rounded-xl py-3 pl-12 pr-4 text-sm text-[#E1E1E1] focus:outline-none focus:border-purple-500/50 focus:bg-[#161616] transition-all placeholder-[#444]"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                             required
@@ -97,15 +97,15 @@ export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel 
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider ml-1">Description</label>
+                    <label className="text-xs font-semibold text-[#666] uppercase tracking-wider ml-1">Description</label>
                     <div className="relative group">
                         <div className="absolute top-3 left-4 pointer-events-none">
-                            <FileText className="h-5 w-5 text-gray-500 group-focus-within:text-purple-400 transition-colors" />
+                            <FileText className="h-5 w-5 text-[#666] group-focus-within:text-purple-400 transition-colors" />
                         </div>
                         <textarea
                             placeholder="Describe your event..."
                             rows={4}
-                            className="w-full bg-[#111625] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/50"
+                            className="w-full bg-[#111] border border-[#1F1F1F] rounded-xl py-3 pl-12 pr-4 text-sm text-[#E1E1E1] focus:outline-none focus:border-purple-500/50 focus:bg-[#161616] transition-all placeholder-[#444]"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                             required
@@ -115,14 +115,14 @@ export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider ml-1">Date & Time</label>
+                        <label className="text-xs font-semibold text-[#666] uppercase tracking-wider ml-1">Date & Time</label>
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Calendar className="h-5 w-5 text-gray-500 group-focus-within:text-purple-400 transition-colors" />
+                                <Calendar className="h-5 w-5 text-[#666] group-focus-within:text-purple-400 transition-colors" />
                             </div>
                             <input
                                 type="datetime-local"
-                                className="w-full bg-[#111625] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/50 [color-scheme:dark]"
+                                className="w-full bg-[#111] border border-[#1F1F1F] rounded-xl py-3 pl-12 pr-4 text-sm text-[#E1E1E1] focus:outline-none focus:border-purple-500/50 focus:bg-[#161616] transition-all [color-scheme:dark]"
                                 value={formData.date}
                                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                                 required
@@ -131,16 +131,16 @@ export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider ml-1">Capacity</label>
+                        <label className="text-xs font-semibold text-[#666] uppercase tracking-wider ml-1">Capacity</label>
                         <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Users className="h-5 w-5 text-gray-500 group-focus-within:text-purple-400 transition-colors" />
+                                <Users className="h-5 w-5 text-[#666] group-focus-within:text-purple-400 transition-colors" />
                             </div>
                             <input
                                 type="number"
                                 min="1"
                                 placeholder="100"
-                                className="w-full bg-[#111625] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/50"
+                                className="w-full bg-[#111] border border-[#1F1F1F] rounded-xl py-3 pl-12 pr-4 text-sm text-[#E1E1E1] focus:outline-none focus:border-purple-500/50 focus:bg-[#161616] transition-all placeholder-[#444]"
                                 value={formData.capacity}
                                 onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) })}
                                 required
@@ -150,15 +150,15 @@ export const EventForm = ({ initialData, isEditing = false, onSuccess, onCancel 
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-semibold text-gray-300 uppercase tracking-wider ml-1">Location</label>
+                    <label className="text-xs font-semibold text-[#666] uppercase tracking-wider ml-1">Location</label>
                     <div className="relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <MapPin className="h-5 w-5 text-gray-500 group-focus-within:text-purple-400 transition-colors" />
+                            <MapPin className="h-5 w-5 text-[#666] group-focus-within:text-purple-400 transition-colors" />
                         </div>
                         <input
                             type="text"
                             placeholder="e.g. Grand Hall, New York"
-                            className="w-full bg-[#111625] border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/50"
+                            className="w-full bg-[#111] border border-[#1F1F1F] rounded-xl py-3 pl-12 pr-4 text-sm text-[#E1E1E1] focus:outline-none focus:border-purple-500/50 focus:bg-[#161616] transition-all placeholder-[#444]"
                             value={formData.location}
                             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                             required

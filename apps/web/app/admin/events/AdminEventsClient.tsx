@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '../../../components/Button';
-import { Plus, MapPin, Calendar, Edit2, Trash2 } from 'lucide-react';
+import { Plus, MapPin, Calendar, Edit2, Trash2, ChevronDown } from 'lucide-react';
 import { Modal } from '../../../components/Modal';
 import { EventForm } from '../../../components/admin/EventForm';
 import { deleteEvent, publishEvent } from '../../../lib/api';
@@ -35,88 +35,101 @@ export default function AdminEventsClient({ initialEvents }: { initialEvents: an
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            {/* Events List Header - inspired by "Time Tracker" */}
+            <div className="bg-[#050505] rounded-t-2xl border-b border-[#1F1F1F] p-4 flex items-center justify-between text-xs font-semibold text-[#666] uppercase tracking-wider">
+                <div className="pl-4">Event Details</div>
+                <div className="pr-20">Time & Actions</div>
+            </div>
+
+            <div className="flex flex-col bg-[#050505] rounded-b-2xl border border-[#1F1F1F] divide-y divide-[#1F1F1F] overflow-hidden">
                 {initialEvents.map((event: any) => (
-                    <div key={event._id} className="bg-[#1A2035] border border-white/5 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-purple-500/30 transition-all">
-                        <div className="flex-1">
-                            <h3 className="text-xl font-bold text-white mb-2">{event.title}</h3>
-                            <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                                <div className="flex items-center gap-2">
-                                    <Calendar size={16} className="text-purple-400" />
-                                    <span>{new Date(event.date).toLocaleDateString()} • {new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <div key={event._id} className="group flex flex-col md:flex-row items-center justify-between p-4 hover:bg-[#1A2035] transition-colors gap-4">
+
+                        {/* Left Side: Title & Info */}
+                        <div className="flex items-center gap-4 w-full md:w-auto">
+                            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${event.status === 'PUBLISHED' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' :
+                                event.status === 'CANCELED' ? 'bg-red-500' : 'bg-gray-500'
+                                }`} />
+
+                            <div className="flex flex-col">
+                                <span className="font-medium text-white text-sm">{event.title}</span>
+                                <div className="flex items-center gap-3 text-xs text-gray-400 mt-1">
+                                    <div className="flex items-center gap-1">
+                                        <MapPin size={12} className="text-purple-400" />
+                                        <span>{event.location}</span>
+                                    </div>
+                                    <span className="w-1 h-1 rounded-full bg-gray-600" />
+                                    <span>{event.capacity} seats</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <MapPin size={16} className="text-purple-400" />
-                                    <span>{event.location}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="bg-white/5 px-2 py-0.5 rounded text-xs">Capacity: {event.capacity}</span>
-                                </div>
+                            </div>
+
+                            {/* Status Pills */}
+                            <div className="ml-4">
+                                {event.status === 'PUBLISHED' && (
+                                    <span className="bg-[#1A2F23] text-green-400 px-2.5 py-1 rounded text-[10px] font-bold tracking-wide border border-green-500/10">
+                                        Active
+                                    </span>
+                                )}
+                                {event.status === 'CANCELED' && (
+                                    <span className="bg-[#2F1A1A] text-red-400 px-2.5 py-1 rounded text-[10px] font-bold tracking-wide border border-red-500/10">
+                                        Canceled
+                                    </span>
+                                )}
+                                {(event.status === 'DRAFT' || !event.status) && (
+                                    <span className="bg-[#1E1E2E] text-gray-400 px-2.5 py-1 rounded text-[10px] font-bold tracking-wide border border-gray-500/10">
+                                        Draft
+                                    </span>
+                                )}
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            {/* Status Badges */}
-                            {event.status === 'PUBLISHED' && (
-                                <span className="bg-green-500/10 text-green-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-green-500/20">
-                                    Published
-                                </span>
-                            )}
-                            {event.status === 'CANCELED' && (
-                                <span className="bg-red-500/10 text-red-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-red-500/20">
-                                    Canceled
-                                </span>
-                            )}
-                            {(event.status === 'DRAFT' || !event.status) && (
-                                <span className="bg-gray-500/10 text-gray-400 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-gray-500/20">
-                                    Draft
-                                </span>
-                            )}
+                        {/* Right Side: Date & Actions */}
+                        <div className="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end">
+                            <div className="flex items-center gap-2 text-sm text-gray-400 font-mono">
+                                <span>{new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                <span className="text-gray-600">-</span>
+                                <span>{new Date(event.date).toLocaleDateString()}</span>
+                            </div>
 
-                            {/* Publish Action */}
-                            {event.status !== 'PUBLISHED' && event.status !== 'CANCELED' && (
-                                <Button
-                                    variant="outline"
-                                    className="text-xs h-8 px-3 border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white"
-                                    onClick={async () => {
-                                        if (confirm('Are you sure you want to publish this event?')) {
-                                            await publishEvent(event._id);
-                                            router.refresh();
-                                        }
-                                    }}
+                            <div className="flex items-center gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                {/* Publish Action */}
+                                {event.status !== 'PUBLISHED' && event.status !== 'CANCELED' && (
+                                    <button
+                                        onClick={async () => {
+                                            if (confirm('Are you sure you want to publish this event?')) {
+                                                await publishEvent(event._id);
+                                                router.refresh();
+                                            }
+                                        }}
+                                        className="text-xs px-3 py-1.5 rounded-lg border border-purple-500/30 text-purple-400 hover:bg-purple-500 hover:text-white transition-colors"
+                                    >
+                                        Publish
+                                    </button>
+                                )}
+
+                                <button
+                                    onClick={() => setEditingEvent(event)}
+                                    className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                                    title="Edit"
                                 >
-                                    Publish
-                                </Button>
-                            )}
+                                    <Edit2 size={16} />
+                                </button>
 
-                            <Link href="#" onClick={(e) => {
-                                e.preventDefault();
-                                setEditingEvent(event);
-                            }}>
-                                <Button variant="outline" className="text-sm flex items-center gap-2 h-9">
-                                    <Edit2 size={16} /> Edit
-                                </Button>
-                            </Link>
-
-                            {/* Cancel Action */}
-                            {event.status !== 'CANCELED' && (
-                                <Button
-                                    variant="ghost"
-                                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-9 px-3"
-                                    onClick={async () => {
-                                        if (confirm('Are you sure you want to cancel this event? This cannot be undone.')) {
-                                            try {
+                                {event.status !== 'CANCELED' && (
+                                    <button
+                                        onClick={async () => {
+                                            if (confirm('Are you sure you want to cancel?')) {
                                                 await deleteEvent(event._id);
                                                 router.refresh();
-                                            } catch (error) {
-                                                alert('Failed to delete/cancel event');
                                             }
-                                        }
-                                    }}
-                                >
-                                    <Trash2 size={18} />
-                                </Button>
-                            )}
+                                        }}
+                                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                        title="Cancel Event"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
                 ))}

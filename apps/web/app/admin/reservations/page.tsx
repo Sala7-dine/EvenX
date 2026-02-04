@@ -15,11 +15,6 @@ export default async function AdminReservationsPage() {
 
     return (
         <div>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-2">Manage Reservations</h1>
-                <p className="text-gray-400">View and update reservation status</p>
-            </div>
-
             <AdminReservationTable initialReservations={reservations} />
         </div>
     );

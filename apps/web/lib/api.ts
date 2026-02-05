@@ -50,6 +50,37 @@ export async function getEvent(id: string) {
     }
 }
 
+export interface User {
+    _id: string;
+    name: string;
+    email: string;
+    role: 'ADMIN' | 'PARTICIPANT';
+}
+
+export interface Event {
+    _id: string;
+    title: string;
+    description: string;
+    date: string;
+    location: string;
+    organizer: string;
+    category: string;
+    imageUrl?: string;
+    price: number;
+    totalSeats: number;
+    availableSeats: number;
+    isPublished?: boolean;
+}
+
+export interface Reservation {
+    _id: string;
+    userId: User;
+    eventId: Event;
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELED';
+    tickedId?: string;
+    createdAt: string;
+}
+
 export interface LoginCredentials {
     email: string;
     password?: string;

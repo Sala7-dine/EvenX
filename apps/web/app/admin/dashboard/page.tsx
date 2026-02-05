@@ -1,4 +1,4 @@
-import { getAllReservationsServer, getEvents } from '../../../lib/api';
+import { getAllReservationsServer, getEvents, Reservation, Event as EventType } from '../../../lib/api';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Ticket, Calendar, Users, TrendingUp } from 'lucide-react';
@@ -21,8 +21,8 @@ export default async function AdminDashboard() {
     // Simple stats
     const totalReservations = reservations.length;
     const totalEvents = events.length;
-    const activeEvents = events.filter((e: any) => new Date(e.date) > new Date()).length;
-    const confirmedReservations = reservations.filter((r: any) => r.status === 'CONFIRMED').length;
+    const activeEvents = events.filter((e: EventType) => new Date(e.date) > new Date()).length;
+    const confirmedReservations = reservations.filter((r: Reservation) => r.status === 'CONFIRMED').length;
 
     const stats = [
         { label: 'Total Reservations', value: totalReservations, icon: Ticket, color: 'text-purple-400', bg: 'bg-purple-500/10' },
@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
                     </div>
 
                     <div className="bg-[#111] rounded-xl border border-[#1F1F1F] overflow-hidden">
-                        {reservations.slice(0, 5).map((res: any, index) => (
+                        {reservations.slice(0, 5).map((res: Reservation, index: number) => (
                             <div key={res._id} className={`flex items-center justify-between p-4 bg-[#111] hover:bg-[#1C1C1E] transition-colors gap-4 ${index !== 4 ? 'border-b border-[#1F1F1F]' : ''}`}>
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-900 to-indigo-900 flex items-center justify-center text-xs font-bold text-purple-200 border border-purple-500/20">
@@ -92,8 +92,8 @@ export default async function AdminDashboard() {
                                 </div>
 
                                 <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${res.status === 'CONFIRMED' ? 'bg-[#1A2F23] text-green-400 border-green-900/30' :
-                                        res.status === 'CANCELED' ? 'bg-[#2F1A1A] text-red-400 border-red-900/30' :
-                                            'bg-[#2C2C2E] text-yellow-400 border-yellow-900/30'
+                                    res.status === 'CANCELED' ? 'bg-[#2F1A1A] text-red-400 border-red-900/30' :
+                                        'bg-[#2C2C2E] text-yellow-400 border-yellow-900/30'
                                     }`}>
                                     {res.status}
                                 </span>

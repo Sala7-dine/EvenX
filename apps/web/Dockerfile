@@ -5,15 +5,8 @@ FROM node:20-alpine AS base
 FROM base AS deps
 WORKDIR /app
 
-# Copy root package files including lockfile
-COPY package-lock.json package.json ./
-
-# Copy app package.json into its workspace directory
-COPY apps/web/package.json ./apps/web/package.json
-
-# Copy other necessary workspace configs if needed, or simply install from root
-# To make npm ci work for a workspace, we realistically need the whole workspace structure setup in package.json
-# or we can try to install dependencies from the root.
+# Copy source code
+COPY . .
 
 # Install dependencies
 RUN npm ci
@@ -45,7 +38,7 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/apps/web/public ./public
+COPY --from=builder /app/apps/web/public ./apps/web/public
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
@@ -53,7 +46,7 @@ RUN chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 
 USER nextjs
 
@@ -61,4 +54,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["node", "server.js"]
+CMD ["node", "apps/web/server.js"]

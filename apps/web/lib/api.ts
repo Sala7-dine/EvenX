@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 
-export const API_URL = 'http://127.0.0.1:3000'; // Adjust if different port
+export const API_URL = typeof window === 'undefined'
+    ? (process.env.API_URL || 'http://api:3000')
+    : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001');
 
 export async function getEvents() {
     try {

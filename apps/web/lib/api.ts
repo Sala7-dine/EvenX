@@ -1,6 +1,8 @@
 import Cookies from 'js-cookie';
 
-export const API_URL = 'http://127.0.0.1:3000'; // Adjust if different port
+export const API_URL = typeof window === 'undefined'
+    ? (process.env.API_URL || 'http://api:3000')
+    : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001');
 
 export async function getEvents() {
     try {
@@ -48,6 +50,37 @@ export async function getEvent(id: string) {
         console.error(error);
         return null;
     }
+}
+
+export interface User {
+    _id: string;
+    name: string;
+    email: string;
+    role: 'ADMIN' | 'PARTICIPANT';
+}
+
+export interface Event {
+    _id: string;
+    title: string;
+    description: string;
+    date: string;
+    location: string;
+    organizer: string;
+    category: string;
+    imageUrl?: string;
+    price: number;
+    totalSeats: number;
+    availableSeats: number;
+    isPublished?: boolean;
+}
+
+export interface Reservation {
+    _id: string;
+    userId: User;
+    eventId: Event;
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELED';
+    tickedId?: string;
+    createdAt: string;
 }
 
 export interface LoginCredentials {

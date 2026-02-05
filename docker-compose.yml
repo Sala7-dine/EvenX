@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: evenx-api
+    ports:
+      - "3001:3000"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - NODE_ENV=development
+    networks:
+      - evenx-network
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: evenx-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - API_URL=http://api:3000
+      - NODE_ENV=development
+    depends_on:
+      - api
+    networks:
+      - evenx-network
+
+networks:
+  evenx-network:
+    driver: bridge

@@ -6,13 +6,13 @@ import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-    async findOne(email: string): Promise<User | null> {
-        return this.userModel.findOne({ email }).lean();
-    }
+  async findOne(email: string): Promise<User | null> {
+    return this.userModel.findOne({ email }).lean();
+  }
 
-    async create(user: CreateUserDto): Promise<User> {
-        return this.userModel.create(user);
-    }
+  async create(user: CreateUserDto): Promise<User> {
+    return this.userModel.create(user);
+  }
 }

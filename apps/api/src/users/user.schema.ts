@@ -6,7 +6,6 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-
   @Prop({ required: true })
   name: string;
 
@@ -18,7 +17,6 @@ export class User {
 
   @Prop({ required: true, enum: Role, default: Role.PARTICIPANT, type: String })
   role: Role;
-
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

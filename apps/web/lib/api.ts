@@ -18,7 +18,6 @@ export async function getEvents() {
 }
 
 export async function getAdminEvents() {
-    const token = Cookies.get('token');
     // If running on server, we might need a different way to get token, 
     // but for now this is called from Client Component useEffect or passed from Server Component.
     // Actually, AdminEventsPage is Server Component, so we need a server-side version expecting token.
@@ -275,10 +274,12 @@ export async function getAllReservationsServer(token: string) {
     return res.json();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createEvent(data: any) {
     const token = Cookies.get('token');
     if (!token) throw new Error('Not authenticated');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await fetch(`${API_URL}/events`, {
         method: 'POST',
         headers: {
@@ -295,10 +296,12 @@ export async function createEvent(data: any) {
     return res.json();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function updateEvent(id: string, data: any) {
     const token = Cookies.get('token');
     if (!token) throw new Error('Not authenticated');
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await fetch(`${API_URL}/events/${id}`, {
         method: 'PATCH',
         headers: {

@@ -74,7 +74,9 @@ describe('EventsService', () => {
   describe('findAll', () => {
     it('should return an array of events', async () => {
       jest.spyOn(MockEventModel, 'find').mockReturnValue({
-        exec: jest.fn().mockResolvedValue([mockEvent]),
+        sort: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue([mockEvent]),
+        }),
       } as any);
 
       const result = await service.findAll();

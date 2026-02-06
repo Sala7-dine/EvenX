@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy-900: #0a0e17;
+  --color-navy-800: #111625;
+  --color-primary: #8a2be2;
+  --color-primary-dark: #6a1b9a;
+  
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0a0e17;
+    --color-foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Utility for Hero Glow */
+.hero-glow-bg {
+    background: radial-gradient(circle at 50% 0%, rgba(138, 43, 226, 0.15) 0%, rgba(10, 14, 23, 0) 70%);
+}

@@ -33,6 +33,7 @@ describe('ReservationsService', () => {
       );
     static find = jest.fn();
     static findById = jest.fn();
+    static findOne = jest.fn();
     static countDocuments = jest.fn();
   }
 
@@ -66,6 +67,8 @@ describe('ReservationsService', () => {
       eventsService.findOne.mockResolvedValue({ _id: 'eventId', capacity: 10 });
       // Mock count < capacity
       jest.spyOn(MockReservationModel, 'countDocuments').mockResolvedValue(5);
+      // Mock no existing reservation
+      jest.spyOn(MockReservationModel, 'findOne').mockResolvedValue(null);
 
       const dto = { eventId: 'eventId' };
       const result = await service.create(dto, 'userId');
@@ -84,6 +87,7 @@ describe('ReservationsService', () => {
     it('should throw BadRequestException if event is full', async () => {
       eventsService.findOne.mockResolvedValue({ _id: 'eventId', capacity: 10 });
       jest.spyOn(MockReservationModel, 'countDocuments').mockResolvedValue(10);
+      jest.spyOn(MockReservationModel, 'findOne').mockResolvedValue(null);
 
       await expect(
         service.create({ eventId: 'eventId' }, 'user'),

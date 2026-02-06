@@ -7,12 +7,12 @@ import { Event, EventSchema } from './schemas/event.schema';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [
-        MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
-        AuthModule,
-    ],
-    controllers: [EventsController],
-    providers: [EventsService],
-    exports: [EventsService],
+  imports: [
+    MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
+    AuthModule,
+  ],
+  controllers: [EventsController],
+  providers: [EventsService],
+  exports: [EventsService],
 })
-export class EventsModule { }
+export class EventsModule {}
